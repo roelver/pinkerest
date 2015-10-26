@@ -1,34 +1,85 @@
-.thing-form {
-    margin: 20px 0;
+body {
+	background-color: #333333;
+	color: #e010e0;
+	border-color: #e010e0;
+	font-size: 16px;
+	font-family: Lato, sans-serif;
 }
 
-#banner {
-    border-bottom: none;
-    margin-top: -20px;
+.navbar-default {
+    background-color: inherit;
+    color: inherit;
+	 border-color: inherit;
 }
 
-#banner h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
+a {
+	color: #e010e0;
 }
 
-.hero-unit {
-    position: relative;
-    padding: 30px 15px;
-    color: #F5F5F5;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    background: #4393B9;
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #e010e0;
+    background-color: rgba(224,26,244, 0.2);
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #e010e0;
+    background-color: rgba(224,26,244, 0.2);
+}
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > li > a:hover {
+    background-color: #e010e0;
+    color: #333333;
+}
+
+.subline {
+	position: absolute;
+	left: 437px;
+	top: 54px;
+	font-size: 24px;
+	font-style: italic;
+}
+.form-control {
+    background-color: rgba(224,26,244, 0.2);
+    opacity:0.8;
+    border-color: #e010e0;
+    color: #f060f0;
+    font-size: 20px;
+}
+.navbar {
+	margin-bottom: 50px;
+}
+.frame {
+	padding: 16px;
+	border: 1px solid #e010e0;
+	border-radius: 6px;
+}
+.frame h1 {
+	margin-top: 2px;
+}
+.btn , .btn-default {
+	color: #e010e0;
+	background-color: #333;	
+   border: 1px solid #e010e0;
+}
+.btn:hover, .btn-default:hover {
+   background-color: rgba(224,26,244, 0.2);
+   border: 1px solid #e010e0;
+	color: #e010e0;
+}
+.navbar-default .navbar-text {
+    color: rgba(224,26,244, 0.7);
+}
+.navbar-text {
+    margin-left: 15px;
+}
+.nav-tabs, .page-header {
+   border-bottom: 1px solid #e010e0;
 }
 
 .footer {
     text-align: center;
     padding: 30px 0;
     margin-top: 70px;
-    border-top: 1px solid #E5E5E5;
-}
-
-.navbar-text {
-    margin-left: 15px;
+    border-top: 1px solid #e010e0;
 }
