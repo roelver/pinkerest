@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pinkterestApp')
+angular.module('pinkerestApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/admin', {

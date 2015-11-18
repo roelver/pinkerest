@@ -1,20 +1,17 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header">Features:</h1>
-      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
-        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
-      </ul>
+  <a href="#" ng-show="isLoggedIn()" ng-click="addPink()" class="add-btn" tooltip="Add a pinkture" title="Add a pinkture">
+  <div class="add-btn-in"><i class="glyphicon glyphicon-plus"></i></div></a>
+  <div id="pinktures" class="row">
+  <div masonry masonry-options="{ transitionDuration: '0.4s' }">
+    <div class="masonry-brick" ng-repeat="item in items">
+      <div class="deleter" ng-show="myImage(item)" ng-click="deletePink($index)"><a href="#">X</a></div>
+      <img class="bounded-img" ng-src="{{item.imgUrl}}"><br/>
+      <div class="title">{{item.title}}</div><span class="score">({{item.pinkScore}}%)</span>
     </div>
   </div>
 </div>
+</div>
+<div ng-include="'components/footer.html'"></div>
 
-<footer class="footer">
-  <div class="container">
-      <p>Angular Fullstack v2.1.1 |
-        <a href="https://twitter.com/tyhenkel">@tyhenkel</a> |
-         <a href="https://github.com/DaftMonk/generator-angular-fullstack/issues?state=open">Issues</a></p>
-  </div>
-</footer>

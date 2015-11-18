@@ -7,10 +7,10 @@
   border-radius: 5px 5px 0 0;
 }
 .modal-primary .modal-header {
-  background: #428bca;
+  background: #e010e0;
 }
 .modal-info .modal-header {
-  background: #5bc0de;
+  background: #FF64C8;
 }
 .modal-success .modal-header {
   background: #5cb85c;
@@ -20,4 +20,16 @@
 }
 .modal-danger .modal-header {
   background: #d9534f;
+}
+.img-container {
+	width: 300px;
+	height: 200px;
+}
+#newPink {
+	max-width: 300px;
+	max-height: 200px;
+	overflow: none;
+}
+#pinkbar {
+	background-color: #FF64C8;
 }

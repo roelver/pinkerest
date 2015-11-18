@@ -1,26 +1,28 @@
 'use strict';
 
-angular.module('pinkterestApp')
-  .controller('LoginCtrl', function ($scope, Auth, $location) {
-    $scope.user = {};
-    $scope.errors = {};
+angular.module('pinkerestApp')
+  .controller('LoginCtrl', function ($scope, $auth, $location, toastr) {
 
-    $scope.login = function(form) {
-      $scope.submitted = true;
-
-      if(form.$valid) {
-        Auth.login({
-          email: $scope.user.email,
-          password: $scope.user.password
-        })
-        .then( function() {
-          // Logged in, redirect to home
+    $scope.login = function() {
+      $auth.login($scope.user)
+        .then(function() {
+          toastr.success('You have successfully signed in');
           $location.path('/');
         })
-        .catch( function(err) {
-          $scope.errors.other = err.message;
+        .catch(function(response) {
+          toastr.error(response.data.message, response.status);
         });
-      }
+    };
+
+    $scope.authenticate = function(provider) {
+      $auth.authenticate(provider)
+        .then(function() {
+          toastr.success('You have successfully signed in with ' + provider);
+          $location.path('/');
+        })
+        .catch(function(response) {
+          toastr.error(response.data.message);
+        });
     };
 
   });

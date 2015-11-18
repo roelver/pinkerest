@@ -6,6 +6,7 @@ var crypto = require('crypto');
 
 var UserSchema = new Schema({
   name: String,
+  username: String,
   email: { type: String, lowercase: true },
   role: {
     type: String,
@@ -92,7 +93,7 @@ var validatePresenceOf = function(value) {
  */
 UserSchema
   .pre('save', function(next) {
-    if (!this.isNew) return next();
+    if (!this.isNew || this.provider !== 'local') return next();
 
     if (!validatePresenceOf(this.hashedPassword))
       next(new Error('Invalid password'));

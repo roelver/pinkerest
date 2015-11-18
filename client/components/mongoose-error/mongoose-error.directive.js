@@ -3,7 +3,7 @@
 /**
  * Removes server error when user updates input
  */
-angular.module('pinkterestApp')
+angular.module('pinkerestApp')
   .directive('mongooseError', function () {
     return {
       restrict: 'A',

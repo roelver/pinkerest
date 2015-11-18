@@ -1,0 +1,10 @@
+-- login with Twitter 
+	Framework: Satellite
+-- Upload image in a popup
+	Display the sized image as soon as a valid url is entered
+-- Show the dashboard
+	Framework: Masonry JS
+-- Scan images for their pinkness
+	Background canvas, progress bar
+-- Delete your own images
+-- Like buttons

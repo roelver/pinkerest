@@ -1,12 +1,44 @@
 'use strict';
 
-angular.module('pinkterestApp', [
+angular.module('pinkerestApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'satellizer',
+  'toastr',
+  'wu.masonry'
 ])
+ 
+
+  .config(function($authProvider) {
+    $authProvider.github({
+      clientId: 'a7b1d1bd1b36c146e7e9',
+      url: '/auth/github',
+      authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+      redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
+      optionalUrlParams: ['scope'],
+      scope: ['user:email'],
+      scopeDelimiter: ' ',
+      type: '2.0',
+      popupOptions: { width: 1020, height: 618 }
+    });
+
+    $authProvider.twitter({
+      url: '/auth/twitter',
+      authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+      redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
+      type: '1.0',
+      popupOptions: { width: 495, height: 645 }
+    });
+
+    $authProvider.loginUrl = '/auth/local/login';
+    $authProvider.signupUrl = '/auth/local/signup';
+    $authProvider.unlinkUrl = '/auth/unlink/';
+
+  })
+
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
       .otherwise({
@@ -14,43 +46,7 @@ angular.module('pinkterestApp', [
       });
 
     $locationProvider.html5Mode(true);
-    $httpProvider.interceptors.push('authInterceptor');
+
   })
 
-  .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
-    return {
-      // Add authorization token to headers
-      request: function (config) {
-        config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
-        }
-        return config;
-      },
-
-      // Intercept 401s and redirect you to login
-      responseError: function(response) {
-        if(response.status === 401) {
-          $location.path('/login');
-          // remove any stale tokens
-          $cookieStore.remove('token');
-          return $q.reject(response);
-        }
-        else {
-          return $q.reject(response);
-        }
-      }
-    };
-  })
-
-  .run(function ($rootScope, $location, Auth) {
-    // Redirect to login if route requires auth and you're not logged in
-    $rootScope.$on('$routeChangeStart', function (event, next) {
-      Auth.isLoggedInAsync(function(loggedIn) {
-        if (next.authenticate && !loggedIn) {
-          event.preventDefault();
-          $location.path('/login');
-        }
-      });
-    });
-  });
+;

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('pinkterestApp')
+angular.module('pinkerestApp')
   .controller('SettingsCtrl', function ($scope, User, Auth) {
     $scope.errors = {};
 

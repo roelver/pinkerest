@@ -5,11 +5,11 @@ var controller = require('./pinkture.controller');
 
 var router = express.Router();
 
+router.get('/img/:img', controller.download);
 router.get('/', controller.index);
-router.get('/:id', controller.show);
+router.post('/store', controller.storeImg);
 router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
+router.delete('/', controller.removeImg);
 
 module.exports = router;

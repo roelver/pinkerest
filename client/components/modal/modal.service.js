@@ -1,77 +1,115 @@
 'use strict';
 
-angular.module('pinkterestApp')
-  .factory('Modal', function ($rootScope, $modal) {
-    /**
-     * Opens a modal
-     * @param  {Object} scope      - an object to be merged with modal's scope
-     * @param  {String} modalClass - (optional) class(es) to be applied to the modal
-     * @return {Object}            - the instance $modal.open() returns
-     */
-    function openModal(scope, modalClass) {
+angular.module('pinkerestApp')
+  .factory('AddPinkModal', function ($rootScope, $modal, $http, RefreshService, ProcessService, toastr) {
+ 
+
+     function openModal(scope, modalClass) {
       var modalScope = $rootScope.$new();
       scope = scope || {};
       modalClass = modalClass || 'modal-default';
 
       angular.extend(modalScope, scope);
+  
 
       return $modal.open({
-        templateUrl: 'components/modal/modal.html',
+        templateUrl: 'components/modal/addpinkmodal.html',
         windowClass: modalClass,
         scope: modalScope
       });
     }
 
-    // Public API here
+
+     // Public API here
     return {
+      choice: function(callback) {
+        callback = callback || angular.noop;
 
-      /* Confirmation modals */
-      confirm: {
+        return function() {
+            var args = Array.prototype.slice.call(arguments);
+            var name = args.shift();
+            var showModal;
 
-        /**
-         * Create a function to open a delete confirmation modal (ex. ng-click='myModalFn(name, arg1, arg2...)')
-         * @param  {Function} del - callback, ran when delete is confirmed
-         * @return {Function}     - the function to open the modal (ex. myModalFn)
-         */
-        delete: function(del) {
-          del = del || angular.noop;
-
-          /**
-           * Open a delete confirmation modal
-           * @param  {String} name   - name or info to show on modal
-           * @param  {All}           - any additional args are passed straight to del callback
-           */
-          return function() {
-            var args = Array.prototype.slice.call(arguments),
-                name = args.shift(),
-                deleteModal;
-
-            deleteModal = openModal({
+            showModal = openModal({
               modal: {
                 dismissable: true,
-                title: 'Confirm Delete',
-                html: '<p>Are you sure you want to delete <strong>' + name + '</strong> ?</p>',
-                buttons: [{
-                  classes: 'btn-danger',
-                  text: 'Delete',
-                  click: function(e) {
-                    deleteModal.close(e);
-                  }
-                }, {
-                  classes: 'btn-default',
-                  text: 'Cancel',
-                  click: function(e) {
-                    deleteModal.dismiss(e);
-                  }
-                }]
-              }
-            }, 'modal-danger');
+                title: 'Add your Pinkture',
+                text: '',
+                me: {},
+                imgUrl: '',
+                description: '',
+                progress: 0,
+                notPinkEnough: true,  //Disable buttons
+                noImageYet: true,
+                setImageSrc: function() {
+                      RefreshService.setImageSrc(this.imgUrl);
+                      $http.get('/auth/me')
+                         .success(function(data) {
+                           $rootScope.me = data;
+                      });
 
-            deleteModal.result.then(function(event) {
-              del.apply(event, args);
-            });
+                      var img = $("#newPink");
+                      if (img) {
+                        this.setButtons(false, true);
+                      }
+                },
+                setButtons: function(noImageYet, notPinkEnough) {
+                  this.noImageYet = noImageYet;
+                  this.notPinkEnough = notPinkEnough; // true if pinkness > 30%
+                },
+
+                wrapUp: function(filename, obj) {
+                    ProcessService.loadedImg(filename);
+
+                    obj.noImageYet = false;
+                    obj.notPinkEnough = ProcessService.notPinkEnough(); 
+                    if (obj.notPinkEnough) {
+                      toastr.warning('Your pinkture is not PINK enough! Try another one.')
+                    }
+                    $.ajax({
+                        url: '/api/pinktures?' + $.param({"filename": filename}),
+                        type: 'DELETE',
+                          success: function(result) {
+                          console.log('Delete: ', result);
+                      }                
+                    });
+                    $rootScope.$apply();
+                  },
+
+                analyze: function( )  {
+                    var callback = this.wrapUp;
+                    var self = this;
+                    $http.post("/api/pinktures/store", {myurl: this.imgUrl})
+                       .then(function( response ) {
+                          var filename = response.data;
+
+                          RefreshService.setImageSrc('/api/pinktures/img/'+filename);
+                          setTimeout(callback, 300, filename, self);
+                        }, function(err, data) {
+                              console.log('Failed', err, data);
+                        });
+                },
+                save: function() {
+                    showModal.close();
+                    var newPink = {};
+                    newPink.title = this.description;
+                    newPink.imgUrl = this.imgUrl
+                    newPink.pinkScore= ProcessService.getPinkness();
+                    newPink.likes= 0;
+                    newPink.existing= true;
+                    newPink.owner = $rootScope.me;
+
+                   $http.post("/api/pinktures/", newPink)
+                       .then(function( response ) {
+                           console.log("Pinkture is saved", response);
+                           callback();
+                    });
+                }
+
+              }
+            }, 'modal-info');
           };
-        }
       }
-    };
-  });
+    } 
+
+});
